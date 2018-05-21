@@ -88,7 +88,7 @@ def main(args):
             })
 
     print('# HELP megaraid_controllers MegaRAID controllers')
-    print('# TYPE megaraid_controllers gague')
+    print('# TYPE megaraid_controllers gauge')
     for ctrl in controllers:
         print('megaraid_controllers{{controller="{controller}",model="{model}"}} 1'.format(**ctrl))
 
@@ -101,34 +101,34 @@ def main(args):
               '{errors_uncorrectable}'.format(**ctrl))
 
     print('# HELP megaraid_controller_bbu MegaRAID controller BBU presence')
-    print('# TYPE megaraid_controller_bbu gague')
+    print('# TYPE megaraid_controller_bbu gauge')
     for ctrl in controllers:
         print('megaraid_controller_bbu{{controller="{controller}"}} {bbu}'.format(**ctrl))
 
     print('# HELP megaraid_roc_temp_celcius MegaRAID controller ROC temperature')
-    print('# TYPE megaraid_roc_temp_celcius gague')
+    print('# TYPE megaraid_roc_temp_celcius gauge')
     for ctrl in controllers:
         print('megaraid_roc_temp_celcius{{controller="{controller}"}} {roc_temp}'.format(**ctrl))
 
     print('# HELP megaraid_virtual_drives MegaRAID virtual drives')
-    print('# TYPE megaraid_virtual_drives gague')
+    print('# TYPE megaraid_virtual_drives gauge')
     for vd in vds:
         print('megaraid_virtual_drives{{controller="{controller}",vd="{vd}",'
               'type="{type}",state="{state}"}} 1'.format(**vd))
 
     print('# HELP megaraid_vd_size_bytes MegaRAID virtual drive size')
-    print('# TYPE megaraid_vd_size_bytes gague')
+    print('# TYPE megaraid_vd_size_bytes gauge')
     for vd in vds:
         print('megaraid_vd_size_bytes{{controller="{controller}",vd="{vd}"}} {size}'.format(**vd))
 
     print('# HELP megaraid_physical_drives MegaRAID physical drives')
-    print('# TYPE megaraid_physical_drives gague')
+    print('# TYPE megaraid_physical_drives gauge')
     for pd in pds:
         print('megaraid_physical_drives{{controller="{controller}",enclosure="{enclosure}",'
               'slot="{slot}",vd="{vd}",state="{state}"}} 1'.format(**pd))
 
     print('# HELP megaraid_pd_size_bytes MegaRAID physical drive size')
-    print('# TYPE megaraid_pd_size_bytes gague')
+    print('# TYPE megaraid_pd_size_bytes gauge')
     for pd in pds:
         print('megaraid_pd_size_bytes{{controller="{controller}",enclosure="{enclosure}",'
               'slot="{slot}"}} {size}'.format(**pd))
