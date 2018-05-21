@@ -72,7 +72,7 @@ def main(args):
                 'controller': ctrl_id,
                 'vd': vd_id,
                 'type': vd['TYPE'],
-                'state': vd['State'],
+                'state': vd['State'].lower(),
                 'size': parse_size(vd['Size']),
             })
 
@@ -83,7 +83,7 @@ def main(args):
                 'enclosure': enc,
                 'slot': slot,
                 'vd': dg_vd_map.get(pd['DG']),
-                'state': pd['State'],
+                'state': pd['State'].lower(),
                 'size': parse_size(pd['Size']),
             })
 
