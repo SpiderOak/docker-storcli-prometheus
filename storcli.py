@@ -139,7 +139,7 @@ def get_storcli_json(storcli_path):
 
     # Check if storcli is installed
     if os.path.isfile(storcli_path) and os.access(storcli_path, os.X_OK):
-        storcli_cmd = [storcli_path, '/call', 'show', 'J']
+        storcli_cmd = [storcli_path, '/call', 'show', 'all', 'J']
         proc = subprocess.Popen(storcli_cmd, shell=False,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output_json = proc.communicate()[0]
