@@ -21,6 +21,7 @@ import json
 import os
 import subprocess
 import re
+import time
 from decimal import Decimal
 
 DESCRIPTION = """Parses StorCLI's JSON output and exposes MegaRAID health as
@@ -46,7 +47,10 @@ def main(args):
     controllers = []
     vds = []
     pds = []
+
+    start = time.time()
     data = json.loads(get_storcli_json(args.storcli_path))
+    end = time.time()
 
     for ctrl in data['Controllers']:
         dg_vd_map = {'-': None}
@@ -86,6 +90,10 @@ def main(args):
                 'state': pd['State'].lower(),
                 'size': parse_size(pd['Size']),
             })
+
+    print('# HELP megaraid_scrape_duration_seconds Scrape duration')
+    print('# TYPE megaraid_scrape_duration_seconds gauge')
+    print('megaraid_scrape_duration_seconds {:f}'.format(end - start))
 
     print('# HELP megaraid_controllers MegaRAID controllers')
     print('# TYPE megaraid_controllers gauge')
