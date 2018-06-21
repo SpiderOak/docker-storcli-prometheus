@@ -62,7 +62,7 @@ def main(args):
             'errors_correctable': int(resp['Status']['Memory Correctable Errors']),
             'errors_uncorrectable': int(resp['Status']['Memory Uncorrectable Errors']),
             'bbu': int(resp['HwCfg']['BBU'] != 'Absent'),
-            'roc_temp': int(resp['HwCfg']['ROC temperature(Degree Celsius)']),
+            'roc_temp': int(resp['HwCfg'].get('ROC temperature(Degree Celsius)', 0)),
         })
 
         for vd in resp['VD LIST']:
