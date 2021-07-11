@@ -52,6 +52,8 @@ def main(args):
     data = json.loads(get_storcli_json(args.storcli_path))
     end = time.time()
 
+    cmd = os.path.split(args.storcli_path)[-1]
+
     for ctrl in data['Controllers']:
         dg_vd_map = {'-': None}
 
@@ -93,53 +95,53 @@ def main(args):
 
     print('# HELP megaraid_scrape_duration_seconds Scrape duration')
     print('# TYPE megaraid_scrape_duration_seconds gauge')
-    print('megaraid_scrape_duration_seconds {:f}'.format(end - start))
+    print('megaraid_scrape_duration_seconds{{cmd="{cmd}"}} {duration:f}'.format(cmd=cmd, duration=end - start))
 
     print('# HELP megaraid_controllers MegaRAID controllers')
     print('# TYPE megaraid_controllers gauge')
     for ctrl in controllers:
-        print('megaraid_controllers{{controller="{controller}",model="{model}"}} 1'.format(**ctrl))
+        print('megaraid_controllers{{cmd="{cmd}",controller="{controller}",model="{model}"}} 1'.format(cmd=cmd, **ctrl))
 
     print('# HELP megaraid_controller_memory_errors MegaRAID controller memory errors')
     print('# TYPE megaraid_controller_memory_errors counter')
     for ctrl in controllers:
-        print('megaraid_controller_memory_errors{{controller="{controller}",correctable="y"}} '
-              '{errors_correctable}'.format(**ctrl))
-        print('megaraid_controller_memory_errors{{controller="{controller}",correctable="n"}} '
-              '{errors_uncorrectable}'.format(**ctrl))
+        print('megaraid_controller_memory_errors{{cmd="{cmd}",controller="{controller}",correctable="y"}} '
+              '{errors_correctable}'.format(cmd=cmd, **ctrl))
+        print('megaraid_controller_memory_errors{{cmd="{cmd}",controller="{controller}",correctable="n"}} '
+              '{errors_uncorrectable}'.format(cmd=cmd, **ctrl))
 
     print('# HELP megaraid_controller_bbu MegaRAID controller BBU presence')
     print('# TYPE megaraid_controller_bbu gauge')
     for ctrl in controllers:
-        print('megaraid_controller_bbu{{controller="{controller}"}} {bbu}'.format(**ctrl))
+        print('megaraid_controller_bbu{{cmd="{cmd}",controller="{controller}"}} {bbu}'.format(cmd=cmd, **ctrl))
 
     print('# HELP megaraid_roc_temp_celcius MegaRAID controller ROC temperature')
     print('# TYPE megaraid_roc_temp_celcius gauge')
     for ctrl in controllers:
-        print('megaraid_roc_temp_celcius{{controller="{controller}"}} {roc_temp}'.format(**ctrl))
+        print('megaraid_roc_temp_celcius{{cmd="{cmd}",controller="{controller}"}} {roc_temp}'.format(cmd=cmd, **ctrl))
 
     print('# HELP megaraid_virtual_drives MegaRAID virtual drives')
     print('# TYPE megaraid_virtual_drives gauge')
     for vd in vds:
-        print('megaraid_virtual_drives{{controller="{controller}",vd="{vd}",'
-              'type="{type}",state="{state}"}} 1'.format(**vd))
+        print('megaraid_virtual_drives{{cmd="{cmd}",controller="{controller}",vd="{vd}",'
+              'type="{type}",state="{state}"}} 1'.format(cmd=cmd, **vd))
 
     print('# HELP megaraid_vd_size_bytes MegaRAID virtual drive size')
     print('# TYPE megaraid_vd_size_bytes gauge')
     for vd in vds:
-        print('megaraid_vd_size_bytes{{controller="{controller}",vd="{vd}"}} {size}'.format(**vd))
+        print('megaraid_vd_size_bytes{{cmd="{cmd}",controller="{controller}",vd="{vd}"}} {size}'.format(cmd=cmd, **vd))
 
     print('# HELP megaraid_physical_drives MegaRAID physical drives')
     print('# TYPE megaraid_physical_drives gauge')
     for pd in pds:
-        print('megaraid_physical_drives{{controller="{controller}",enclosure="{enclosure}",'
-              'slot="{slot}",vd="{vd}",state="{state}"}} 1'.format(**pd))
+        print('megaraid_physical_drives{{cmd="{cmd}",controller="{controller}",enclosure="{enclosure}",'
+              'slot="{slot}",vd="{vd}",state="{state}"}} 1'.format(cmd=cmd, **pd))
 
     print('# HELP megaraid_pd_size_bytes MegaRAID physical drive size')
     print('# TYPE megaraid_pd_size_bytes gauge')
     for pd in pds:
-        print('megaraid_pd_size_bytes{{controller="{controller}",enclosure="{enclosure}",'
-              'slot="{slot}"}} {size}'.format(**pd))
+        print('megaraid_pd_size_bytes{{cmd="{cmd}",controller="{controller}",enclosure="{enclosure}",'
+              'slot="{slot}"}} {size}'.format(cmd=cmd, **pd))
 
 
 def get_storcli_json(storcli_path):
@@ -156,6 +158,8 @@ def get_storcli_json(storcli_path):
             '{"Controllers":[{"Command Status": {"Status": "Failure", '
             '"Description": "No Controller found"}}]}'
         )
+    # Trim crap
+    output_json = re.sub(r'[\x00-\x1f\x7f-\xff]', '', output_json)
 
     return output_json
 
